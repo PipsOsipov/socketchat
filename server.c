@@ -37,19 +37,19 @@ int main(void){
 	printf("Сервер успешно запущен. Ожидание подключений на порту %d...\n", PORT);
 	
 	int new_socket;
-    	int addrlen = sizeof(address);
+    int addrlen = sizeof(address);
 
-    	new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen);
-    	if (new_socket < 0) {
+    new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen);
+    if (new_socket < 0) {
 		perror("Ошибка accept");
 		close(server_fd);
 		exit(EXIT_FAILURE);
-    	}
-    	printf("Клиент успешно подключился.\n");
+    }
+    printf("Клиент успешно подключился.\n");
 	
-    	char buffer[1024];
+    char buffer[1024];
     	
-    	while (1) {
+    while (1) {
 		memset(buffer, 0, sizeof(buffer));
 		int bytes_read = read(new_socket, buffer, sizeof(buffer));
 		if (bytes_read <= 0) {
@@ -58,9 +58,9 @@ int main(void){
 		}
 		printf("Клиент прислал: %s", buffer);
 		send(new_socket, buffer, strlen(buffer), 0);
-    	}
-    	close(new_socket);
-    	close(server_fd);
+    }
+    close(new_socket);
+    close(server_fd);
     	
 return 0;
 }
