@@ -47,7 +47,6 @@ int main(void){
     	}
     	printf("Клиент успешно подключился.\n");
 	
-	
     	char buffer[1024];
     	
     	while (1) {
@@ -61,9 +60,11 @@ int main(void){
     			perror("Ошибка чтения из сокета"); 
 			break;
 		}
+		
 		printf("Клиент прислал: %s", buffer);
 		send(new_socket, buffer, strlen(buffer), 0);
     	}
+    	
     	close(new_socket);
     	close(server_fd);
     	
