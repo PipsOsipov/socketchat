@@ -52,8 +52,11 @@ int main(void){
     while (1) {
 		memset(buffer, 0, sizeof(buffer));
 		int bytes_read = read(new_socket, buffer, sizeof(buffer));
-		if (bytes_read <= 0) {
-			printf("Клиент отключился.\n");
+		if (bytes_read == 0) {
+    		printf("Клиент отключился\n");
+    		break;
+		} else if (bytes_read < 0) {
+    		perror("Ошибка чтения из сокета"); 
 			break;
 		}
 		printf("Клиент прислал: %s", buffer);
