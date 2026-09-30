@@ -12,8 +12,8 @@ int main(void){
 	int option = 1;
 	server_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (server_fd < 0) {
-	    perror("Ошибка создания сокета");
-	    exit(EXIT_FAILURE);
+		perror("Ошибка создания сокета");
+		exit(EXIT_FAILURE);
 	}
 	
 	memset(&address, 0, sizeof(address));				//очистка структуры адреса от мусора в памяти
@@ -23,16 +23,16 @@ int main(void){
 	address.sin_port = htons(PORT);
 	
 	if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
-	    perror("Ошибка bind");
-	    close(server_fd);
-	    exit(EXIT_FAILURE);
+		perror("Ошибка bind");
+		close(server_fd);
+		exit(EXIT_FAILURE);
 	}
 	printf("Сокет успешно создан и привязан к порту %d!\n", PORT);
 	
 	if (listen(server_fd, 3) < 0) {
-	    perror("Ошибка listen");
-	    close(server_fd);
-	    exit(EXIT_FAILURE);
+		perror("Ошибка listen");
+		close(server_fd);
+		exit(EXIT_FAILURE);
 	}
 	printf("Сервер успешно запущен. Ожидание подключений на порту %d...\n", PORT);
 	
@@ -41,11 +41,26 @@ int main(void){
 
     	new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen);
     	if (new_socket < 0) {
-           perror("Ошибка accept");
-           close(server_fd);
-           exit(EXIT_FAILURE);
+		perror("Ошибка accept");
+		close(server_fd);
+		exit(EXIT_FAILURE);
     	}
     	printf("Клиент успешно подключился.\n");
 	
+    	char buffer[1024];
+    	
+    	while (1) {
+		memset(buffer, 0, sizeof(buffer));
+		int bytes_read = read(new_socket, buffer, sizeof(buffer));
+		if (bytes_read <= 0) {
+			printf("Клиент отключился.\n");
+			break;
+		}
+		printf("Клиент прислал: %s", buffer);
+		send(new_socket, buffer, strlen(buffer), 0);
+    	}
+    	close(new_socket);
+    	close(server_fd);
+    	
 return 0;
 }
