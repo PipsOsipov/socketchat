@@ -35,12 +35,25 @@ int main(void){
 		exit(EXIT_FAILURE);
 	}
 	
-	if(connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)){
+	if(connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr))){
 		perror("\nОшибка connect\n");
 		close(sock);
 		exit(EXIT_FAILURE);
 	}
 	printf("\nПодключение к серверу завершено успешно\n");
+	
+	memset(&message, 0, sizeof(message));
+	
+	printf("Введите сообщение: ");
+	fgets(message, BUFF_SIZE, stdin);
 
+	send(sock, message, strlen(message), 0);
+	printf("Сообщение отправлено.\n");
+
+	int bytes_read = read(sock, buffer, BUFF_SIZE);
+	printf("Ответ от сервера: %s\n", buffer);
+	
+	close(sock);
+	
 return 0;
 }
