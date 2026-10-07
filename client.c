@@ -41,18 +41,22 @@ int main(void){
 		exit(EXIT_FAILURE);
 	}
 	printf("\nПодключение к серверу завершено успешно\n");
+	while(1){
+		
+		memset(&message, 0, sizeof(message));
 	
-	memset(&message, 0, sizeof(message));
-	
-	printf("Введите сообщение: ");
-	fgets(message, BUFF_SIZE, stdin);
+		printf("Введите сообщение: ");
+		fgets(message, BUFF_SIZE, stdin);
 
-	send(sock, message, strlen(message), 0);
-	printf("Сообщение отправлено.\n");
+		send(sock, message, strlen(message), 0);
+		printf("Сообщение отправлено.\n");
 
-	int bytes_read = read(sock, buffer, BUFF_SIZE);
-	printf("Ответ от сервера: %s\n", buffer);
-	
+		if(int bytes_read = read(sock, buffer, BUFF_SIZE) < 0){
+			perror("reading error");
+			break;
+		}
+		printf("Ответ от сервера: %s\n", buffer);
+	}
 	close(sock);
 	
 return 0;
